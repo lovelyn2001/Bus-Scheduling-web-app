@@ -1,93 +1,76 @@
-// Sample list of available seats
-let totalSeats = 10; // Number of seats
-let takenSeats = []; // Array to hold randomly taken seats
+// Bus Selection Page Logic (index.html)
+if (window.location.pathname === '/index.html' || window.location.pathname === '/') {
+    document.querySelectorAll('.checkout-button').forEach(button => {
+        button.addEventListener('click', function () {
+            const destination = this.getAttribute('data-destination');
+            const price = this.getAttribute('data-price');
+            const time = this.getAttribute('data-time');
 
-// Function to randomly mark some seats as taken
-function initializeSeats() {
-    takenSeats = generateRandomTakenSeats(3); // Randomly take 3 seats
+            // Store bus details in sessionStorage
+            sessionStorage.setItem('busDestination', destination);
+            sessionStorage.setItem('busPrice', price);
+            sessionStorage.setItem('departureTime', time);
+
+            // Redirect to checkout page
+            window.location.href = '/checkout.html';
+        });
+    });
+}
+
+// Checkout Page Logic (checkout.html)
+if (window.location.pathname === '/checkout.html') {
+    // Retrieve bus details and display them
+    document.getElementById('bus-destination').textContent = `${sessionStorage.getItem('busDestination')} - ₦${sessionStorage.getItem('busPrice')}`;
+
+    // Populate seat options
     const seatDropdown = document.getElementById('seat');
-    seatDropdown.innerHTML = ''; // Clear previous seat options
+    const takenSeats = [1, 3, 5]; // Example of taken seats
 
-    // Loop to create seat options and mark unavailable ones
-    for (let i = 1; i <= totalSeats; i++) {
+    for (let i = 1; i <= 10; i++) {
         const option = document.createElement('option');
         option.value = i;
-
-        if (takenSeats.includes(i)) {
-            option.textContent = `Seat ${i} (Taken)`;
-            option.disabled = true; // Disable taken seats
-        } else {
-            option.textContent = `Seat ${i}`;
-        }
-
+        option.textContent = `Seat ${i}` + (takenSeats.includes(i) ? ' (Taken)' : '');
+        if (takenSeats.includes(i)) option.disabled = true;
         seatDropdown.appendChild(option);
     }
+
+    // Handle form submission
+    document.getElementById('booking-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        // Store booking details
+        sessionStorage.setItem('selectedSeat', document.getElementById('seat').value);
+        sessionStorage.setItem('customerName', document.getElementById('name').value);
+        sessionStorage.setItem('customerPhone', document.getElementById('phone').value);
+        sessionStorage.setItem('customerEmail', document.getElementById('email').value);
+
+        // Redirect to receipt page
+        window.location.href = '/receipt.html';
+    });
 }
 
-// Function to generate random seats taken
-function generateRandomTakenSeats(count) {
-    let takenSeats = [];
-    while (takenSeats.length < count) {
-        const seatNumber = Math.floor(Math.random() * totalSeats) + 1;
-        if (!takenSeats.includes(seatNumber)) {
-            takenSeats.push(seatNumber);
-        }
-    }
-    return takenSeats;
-}
+// Receipt Page Logic (receipt.html)
+if (window.location.pathname === '/receipt.html') {
+    // Populate receipt data
+    document.getElementById('ticket-number').textContent = Math.floor(Math.random() * 1000000);
+    document.getElementById('bus-info').textContent = `${sessionStorage.getItem('busDestination')} - ₦${sessionStorage.getItem('busPrice')}`;
+    document.getElementById('seat-number').textContent = sessionStorage.getItem('selectedSeat');
+    document.getElementById('customer-name').textContent = sessionStorage.getItem('customerName');
+    document.getElementById('customer-phone').textContent = sessionStorage.getItem('customerPhone');
+    document.getElementById('customer-email').textContent = sessionStorage.getItem('customerEmail');
+    document.getElementById('departure-time').textContent = sessionStorage.getItem('departureTime');
 
-// Function to proceed to checkout
-function proceedToCheckout(destination, price, departureTime) {
-    document.getElementById('bus-destination').textContent = `${destination} - ₦${price}`;
-    document.getElementById('checkout-form').style.display = 'block';
-
-    // Store selected bus info for receipt generation
-    document.getElementById('departure-time').textContent = departureTime;
-    
-    initializeSeats(); // Initialize seat options when proceeding to checkout
-}
-
-// Form submission event handler
-document.getElementById('booking-form').addEventListener('submit', function (e) {
-    e.preventDefault(); // Prevent form submission
-
-    // Capture form details
-    const selectedSeat = document.getElementById('seat').value;
-    const customerName = document.getElementById('name').value;
-    const customerPhone = document.getElementById('phone').value;
-    const customerEmail = document.getElementById('email').value;
-    const busInfo = document.getElementById('bus-destination').textContent;
-    const departureTime = document.getElementById('departure-time').textContent;
-
-    // Generate a random ticket number
-    const ticketNumber = Math.floor(Math.random() * 1000000) + 1;
-
-    // Display receipt information
-    document.getElementById('ticket-number').textContent = ticketNumber;
-    document.getElementById('bus-info').textContent = busInfo;
-    document.getElementById('seat-number').textContent = selectedSeat;
-    document.getElementById('customer-name').textContent = customerName;
-    document.getElementById('customer-phone').textContent = customerPhone;
-    document.getElementById('customer-email').textContent = customerEmail;
-    document.getElementById('departure-time').textContent = departureTime;
-
-    // Show receipt section
-    document.getElementById('receipt').style.display = 'block';
-
-    // Generate downloadable receipt content
+    // Generate downloadable receipt
     const receiptContent = `
-        Ticket Number: ${ticketNumber}\n
-        Bus: ${busInfo}\n
-        Seat Number: ${selectedSeat}\n
-        Customer Name: ${customerName}\n
-        Phone Number: ${customerPhone}\n
-        Email: ${customerEmail}\n
-        Departure Time: ${departureTime}
+        Ticket Number: ${document.getElementById('ticket-number').textContent}\n
+        Bus: ${document.getElementById('bus-info').textContent}\n
+        Seat Number: ${document.getElementById('seat-number').textContent}\n
+        Customer Name: ${document.getElementById('customer-name').textContent}\n
+        Phone Number: ${document.getElementById('customer-phone').textContent}\n
+        Email Address: ${document.getElementById('customer-email').textContent}\n
+        Departure Time: ${document.getElementById('departure-time').textContent}
     `;
-
-    // Create a downloadable file link
     const blob = new Blob([receiptContent], { type: 'text/plain' });
     const downloadLink = document.getElementById('download-receipt');
     downloadLink.href = URL.createObjectURL(blob);
-    downloadLink.download = `ticket_${ticketNumber}.txt`;
-});
+}

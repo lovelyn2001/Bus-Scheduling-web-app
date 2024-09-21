@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bus Scheduling System</title>
     <link rel="stylesheet" href="Styles/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
 </head>
 <body>
     <div class="container">
@@ -16,51 +16,18 @@
             <div class="bus">
                 <h2> <i class="fa-solid fa-bus"></i> Abuja - ₦10,000</h2>
                 <p>Departure: 15:00</p>
-                <button onclick="proceedToCheckout('Abuja', 10000, '15:00')">Proceed to Checkout</button>
+                <button class="checkout-button" data-destination="Abuja" data-price="10000" data-time="15:00">Proceed to Checkout</button>
             </div>
             <div class="bus">
                 <h2> <i class="fa-solid fa-bus"></i> Jos - ₦13,000</h2>
                 <p>Departure: 13:30</p>
-                <button onclick="proceedToCheckout('Jos', 13000, '13:30')">Proceed to Checkout</button>
+                <button class="checkout-button" data-destination="Jos" data-price="13000" data-time="13:30">Proceed to Checkout</button>
             </div>
             <div class="bus">
                 <h2> <i class="fa-solid fa-bus"></i> Lagos - ₦15,000</h2>
                 <p>Departure: 14:00</p>
-                <button onclick="proceedToCheckout('Lagos', 15000, '14:00')">Proceed to Checkout</button>
+                <button class="checkout-button" data-destination="Lagos" data-price="15000" data-time="14:00">Proceed to Checkout</button>
             </div>
-        </div>
-
-        <!-- Checkout Form -->
-        <div id="checkout-form">
-            <h2>Checkout - <span id="bus-destination"></span></h2>
-            <form id="booking-form">
-                <label for="seat">Choose a Seat:</label>
-                <select id="seat" required></select>
-
-                <label for="name">Name:</label>
-                <input type="text" id="name" required>
-
-                <label for="phone">Phone Number:</label>
-                <input type="text" id="phone" required>
-
-                <label for="email">Email Address:</label>
-                <input type="email" id="email" required>
-
-                <button type="submit">Submit</button>
-            </form>
-        </div>
-
-        <!-- Receipt Section -->
-        <div id="receipt">
-            <h2>Thank you for your booking!</h2>
-            <p>Ticket Number: <span id="ticket-number"></span></p>
-            <p>Bus: <span id="bus-info"></span></p>
-            <p>Seat Number: <span id="seat-number"></span></p>
-            <p>Customer Name: <span id="customer-name"></span></p>
-            <p>Phone Number: <span id="customer-phone"></span></p>
-            <p>Email Address: <span id="customer-email"></span></p>
-            <p>Departure Time: <span id="departure-time"></span></p>
-            <a href="#" id="download-receipt" download="ticket.txt">Download Receipt</a>
         </div>
     </div>
 

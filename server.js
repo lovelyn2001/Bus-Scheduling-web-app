@@ -11,6 +11,13 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 })
 
+app.get('/checkout.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'Checkout.html'));
+})
+
+app.get('/receipt.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'Receipt.html'));
+})
 
 
 // Start the server
